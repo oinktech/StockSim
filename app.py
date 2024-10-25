@@ -66,7 +66,9 @@ def settings():
     if request.method == 'POST':
         initial_capital = request.form['initial_capital']
         mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"initial_capital": initial_capital}})
-        flash('初始資金已更新！', 'success')
+        # 清空已購買的股票
+        mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"stocks": []}})
+        flash('初始資金已更新並且已清空所有已購買的股票！', 'success')
         return redirect(url_for('dashboard'))
     return render_template('settings.html')
 
