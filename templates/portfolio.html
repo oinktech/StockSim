@@ -1,24 +1,38 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>已購買的股票</h1>
-<table>
-    <thead>
-        <tr>
-            <th>股票代碼</th>
-            <th>數量</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for stock in stocks %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>已購買股票</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>已購買的股票</h1>
+    <table>
+        <thead>
             <tr>
-                <td>{{ stock.symbol }}</td>
-                <td>{{ stock.quantity }}</td>
+                <th>股票代碼</th>
+                <th>數量</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-<form method="POST" onsubmit="return confirm('您確定要賣出所有股票嗎？');">
-    <button type="submit">賣出所有股票</button>
-</form>
-{% endblock %}
+    <form method="POST" onsubmit="return confirm('您確定要賣出所有股票嗎？');">
+        <button type="submit">賣出所有股票</button>
+    </form>
+    
+    <nav>
+        <a href="{{ url_for('dashboard') }}">返回儀表板</a>
+    </nav>
+    <footer>
+        <p>&copy; 2024 股票模擬網站</p>
+    </footer>
+</body>
+</html>
