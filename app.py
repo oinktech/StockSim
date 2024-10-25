@@ -167,6 +167,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    with app.app_context():
-        init_db_route()  # 確保在啟動時初始化數據庫
+    
     app.run(host='0.0.0.0', port=10000, debug=True)
