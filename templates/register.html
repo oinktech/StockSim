@@ -1,15 +1,21 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>註冊</h1>
-<form method="POST">
-    <div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>註冊</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>註冊</h1>
+    <form method="POST">
         <label for="email">電子郵件:</label>
         <input type="email" name="email" required>
-    </div>
-    <div>
         <label for="password">密碼:</label>
         <input type="password" name="password" required>
-    </div>
-    <button type="submit">註冊</button>
-</form>
-{% endblock %}
+        <button type="submit">註冊</button>
+    </form>
+    <footer>
+        <p><a href="{{ url_for('login') }}">已經有帳號了？登入</a></p>
+    </footer>
+</body>
+</html>
