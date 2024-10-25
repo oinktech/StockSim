@@ -10,6 +10,8 @@ from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# 初始化 PyMongo
 mongo = PyMongo(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -25,6 +27,19 @@ def load_user(user_id):
         user_obj.id = user['_id']
         return user_obj
     return None
+
+@app.before_first_request
+def init_db():
+    # 确保数据库和集合存在
+    mongo.db.users.find_one()  # 尝试访问用户集合
+    if mongo.db.users.count_documents({}) == 0:  # 检查是否存在用户
+        # 插入初始管理员账户或默认数据
+        mongo.db.users.insert_one({
+            "email": "admin@example.com",  # 初始管理员账户
+            "password": generate_password_hash("admin123"),  # 默认密码
+            "initial_capital": 10000,
+            "stocks": []
+        })
 
 @app.route('/')
 def index():
