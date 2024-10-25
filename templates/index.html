@@ -1,5 +1,20 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>歡迎來到股票模擬網站</h1>
-<p><a href="{{ url_for('login') }}">登入</a> | <a href="{{ url_for('register') }}">註冊</a></p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>股票模擬網站</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>歡迎來到股票模擬網站</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('login') }}">登入</a>
+        <a href="{{ url_for('register') }}">註冊</a>
+    </nav>
+    <footer>
+        <p>&copy; 2024 股票模擬網站</p>
+    </footer>
+</body>
+</html>
