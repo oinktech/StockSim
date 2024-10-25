@@ -3,3 +3,4 @@ Flask-PyMongo
 Flask-Login
 python-dotenv
 requests
+Werkzeug
