@@ -7,8 +7,6 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from config import Config
-from pymongo import MongoClient
-from flask_caching import Cache
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -16,28 +14,16 @@ mongo = PyMongo(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# 初始化快取
-app.config['CACHE_TYPE'] = 'SimpleCache'
-app.config['CACHE_DEFAULT_TIMEOUT'] = 300
-cache = Cache(app)
-
-# MongoDB 連接
-mongo_uri = os.getenv('MONGO_URI')
-client = MongoClient(mongo_uri)
-db = client['0001']
-users_collection = db.users
-
-# 用户类
 class User(UserMixin):
-    def __init__(self, id, email):
-        self.id = id
-        self.email = email
+    pass
 
 @login_manager.user_loader
 def load_user(user_id):
     user = mongo.db.users.find_one({"_id": user_id})
     if user:
-        return User(id=user['_id'], email=user['email'])
+        user_obj = User()
+        user_obj.id = user['_id']
+        return user_obj
     return None
 
 @app.route('/')
@@ -51,7 +37,9 @@ def login():
         password = request.form['password']
         user = mongo.db.users.find_one({"email": email})
         if user and check_password_hash(user['password'], password):
-            login_user(User(user['_id'], user['email']))
+            user_obj = User()
+            user_obj.id = user['_id']
+            login_user(user_obj)
             return redirect(url_for('dashboard'))
         flash('登入失敗。請檢查電子郵件和密碼', 'danger')
     return render_template('login.html')
@@ -61,7 +49,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
+        hashed_password = generate_password_hash(password)  # 使用默认方法
         mongo.db.users.insert_one({"email": email, "password": hashed_password, "initial_capital": 10000, "stocks": []})
         flash('註冊成功！您現在可以登入。', 'success')
         return redirect(url_for('login'))
@@ -106,11 +94,11 @@ def buy_stock():
     stock_symbol = request.form['stock_symbol']
     quantity = int(request.form['quantity'])
     user = mongo.db.users.find_one({"_id": current_user.id})
-
+    
     # 查詢股價
     response = requests.get(f'https://finnhub.io/api/v1/quote?symbol={stock_symbol}&token={Config.FINNHUB_API_KEY}')
     stock_price = response.json().get('c', 0)
-
+    
     if user['initial_capital'] >= stock_price * quantity:
         # 更新用戶的初始資金
         mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"initial_capital": user['initial_capital'] - stock_price * quantity}})
