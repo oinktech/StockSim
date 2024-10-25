@@ -24,17 +24,18 @@ def load_user(user_id):
     user = mongo.db.users.find_one({"_id": user_id})
     if user:
         user_obj = User()
-        user_obj.id = user['_id']
+        user_obj.id = str(user['_id'])  # 確保是字符串
         return user_obj
     return None
 
-@app.before_first_request
-def init_db():
-    """ 初始化数据库和插入默认数据 """
+@app.route('/init_db')
+def init_db_route():
+    # 确保数据库和集合存在
     if mongo.db.users.count_documents({}) == 0:  # 检查是否存在用户
+        # 插入初始管理员账户或默认数据
         mongo.db.users.insert_one({
-            "email": "admin@example.com",
-            "password": generate_password_hash("admin123"),
+            "email": "admin@example.com",  # 初始管理员账户
+            "password": generate_password_hash("admin123"),  # 默认密码
             "initial_capital": 10000,
             "stocks": []
         })
@@ -51,7 +52,7 @@ def login():
         user = mongo.db.users.find_one({"email": email})
         if user and check_password_hash(user['password'], password):
             user_obj = User()
-            user_obj.id = user['_id']
+            user_obj.id = str(user['_id'])
             login_user(user_obj)
             return redirect(url_for('dashboard'))
         flash('登入失敗。請檢查電子郵件和密碼', 'danger')
@@ -62,7 +63,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
+        hashed_password = generate_password_hash(password)  # 使用默认方法
         mongo.db.users.insert_one({"email": email, "password": hashed_password, "initial_capital": 10000, "stocks": []})
         flash('註冊成功！您現在可以登入。', 'success')
         return redirect(url_for('login'))
@@ -78,9 +79,8 @@ def dashboard():
 def settings():
     if request.method == 'POST':
         initial_capital = request.form['initial_capital']
-        mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"initial_capital": initial_capital}})
         # 清空已購買的股票
-        mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"stocks": []}})
+        mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"initial_capital": initial_capital, "stocks": []}})
         flash('初始資金已更新並且已清空所有已購買的股票！', 'success')
         return redirect(url_for('dashboard'))
     return render_template('settings.html')
@@ -167,4 +167,6 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    with app.app_context():
+        init_db_route()  # 確保在啟動時初始化數據庫
     app.run(host='0.0.0.0', port=10000, debug=True)
