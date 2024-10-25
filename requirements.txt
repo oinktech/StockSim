@@ -4,3 +4,4 @@ Flask-Login
 python-dotenv
 requests
 Werkzeug
+flask_caching
