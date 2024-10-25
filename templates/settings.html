@@ -1,11 +1,22 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>設定</h1>
-<form method="POST">
-    <div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>設定</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>設定</h1>
+    <form method="POST">
         <label for="initial_capital">初始資金:</label>
         <input type="number" name="initial_capital" required>
-    </div>
-    <button type="submit">更新資金</button>
-</form>
-{% endblock %}
+        <button type="submit">更新資金</button>
+    </form>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">返回儀表板</a>
+    </nav>
+    <footer>
+        <p>&copy; 2024 股票模擬網站</p>
+    </footer>
+</body>
+</html>
