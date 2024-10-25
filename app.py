@@ -49,7 +49,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password, method='sha256')
+        hashed_password = generate_password_hash(password)  # 使用默认方法
         mongo.db.users.insert_one({"email": email, "password": hashed_password, "initial_capital": 10000, "stocks": []})
         flash('註冊成功！您現在可以登入。', 'success')
         return redirect(url_for('login'))
