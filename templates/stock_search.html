@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>搜尋股票</h1>
+<form method="POST">
+    <div>
+        <label for="stock_symbol">股票代碼:</label>
+        <input type="text" name="stock_symbol" required>
+    </div>
+    <button type="submit">搜尋</button>
+</form>
+
+{% if stock_data %}
+    <h2>股票信息</h2>
+    <p>當前價格: {{ stock_data.c }}</p>
+    <p>開盤價格: {{ stock_data.o }}</p>
+    <p>最高價格: {{ stock_data.h }}</p>
+    <p>最低價格: {{ stock_data.l }}</p>
+    <form method="POST" action="{{ url_for('buy_stock') }}">
+        <input type="hidden" name="stock_symbol" value="{{ request.form['stock_symbol'] }}">
+        <div>
+            <label for="quantity">數量:</label>
+            <input type="number" name="quantity" required>
+        </div>
+        <button type="submit">購買股票</button>
+    </form>
+{% endif %}
+{% endblock %}
