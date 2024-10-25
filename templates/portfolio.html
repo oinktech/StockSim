@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>已購買的股票</h1>
+<table>
+    <thead>
+        <tr>
+            <th>股票代碼</th>
+            <th>數量</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.quantity }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<form method="POST" onsubmit="return confirm('您確定要賣出所有股票嗎？');">
+    <button type="submit">賣出所有股票</button>
+</form>
+{% endblock %}
