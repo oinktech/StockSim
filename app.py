@@ -140,7 +140,7 @@ def portfolio():
         mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"initial_capital": user['initial_capital'] + total_profit}})
         # 清空用戶的股票
         mongo.db.users.update_one({"_id": current_user.id}, {"$set": {"stocks": []}})
-        flash(f'所有股票已成功賣出，總利潤為: {total_profit} 元', 'success')
+        flash(f'所有股票已成功賣出，總利潤為: {total_profit:.2f} 元', 'success')
         return redirect(url_for('portfolio'))
 
     return render_template('portfolio.html', stocks=stocks)
