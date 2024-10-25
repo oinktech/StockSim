@@ -30,13 +30,11 @@ def load_user(user_id):
 
 @app.before_first_request
 def init_db():
-    # 确保数据库和集合存在
-    mongo.db.users.find_one()  # 尝试访问用户集合
+    """ 初始化数据库和插入默认数据 """
     if mongo.db.users.count_documents({}) == 0:  # 检查是否存在用户
-        # 插入初始管理员账户或默认数据
         mongo.db.users.insert_one({
-            "email": "admin@example.com",  # 初始管理员账户
-            "password": generate_password_hash("admin123"),  # 默认密码
+            "email": "admin@example.com",
+            "password": generate_password_hash("admin123"),
             "initial_capital": 10000,
             "stocks": []
         })
@@ -64,7 +62,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)  # 使用默认方法
+        hashed_password = generate_password_hash(password)
         mongo.db.users.insert_one({"email": email, "password": hashed_password, "initial_capital": 10000, "stocks": []})
         flash('註冊成功！您現在可以登入。', 'success')
         return redirect(url_for('login'))
