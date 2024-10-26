@@ -3,6 +3,6 @@ Flask-PyMongo
 Flask-Login
 python-dotenv
 requests
-Werkzeug
+Werkzeug==2.1.2
 flask_caching
 Flask-SQLAlchemy
