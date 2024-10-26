@@ -5,4 +5,4 @@ python-dotenv
 requests
 Werkzeug==2.1.2
 flask_caching
-Flask-SQLAlchemy
+Flask-SQLAlchemy==2.5.1
