@@ -5,3 +5,4 @@ python-dotenv
 requests
 Werkzeug
 flask_caching
+Flask-SQLAlchemy
