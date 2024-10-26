@@ -6,3 +6,4 @@ requests
 Werkzeug==2.1.2
 flask_caching
 Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.36
