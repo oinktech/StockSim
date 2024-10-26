@@ -1,37 +1,33 @@
+<!-- templates/stock_search.html -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>搜尋股票</title>
+    <title>股票搜尋</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>搜尋股票</h1>
-    <form method="POST">
-        <label for="stock_symbol">股票代碼:</label>
-        <input type="text" name="stock_symbol" required>
-        <button type="submit">搜尋</button>
-    </form>
-
-    {% if stock_data %}
-        <h2>股票信息</h2>
-        <p>當前價格: {{ stock_data.c }}</p>
-        <p>開盤價格: {{ stock_data.o }}</p>
-        <p>最高價格: {{ stock_data.h }}</p>
-        <p>最低價格: {{ stock_data.l }}</p>
-        <form method="POST" action="{{ url_for('buy_stock') }}">
-            <input type="hidden" name="stock_symbol" value="{{ request.form['stock_symbol'] }}">
-            <label for="quantity">數量:</label>
-            <input type="number" name="quantity" required>
-            <button type="submit">購買股票</button>
+    <div class="container">
+        <h1>股票搜尋</h1>
+        <form method="POST" action="{{ url_for('stock_search') }}">
+            <input type="text" name="stock_symbol" placeholder="輸入股票代碼" required>
+            <button type="submit">搜尋</button>
         </form>
-    {% endif %}
-    
-    <nav>
-        <a href="{{ url_for('dashboard') }}">返回儀表板</a>
-    </nav>
-    <footer>
-        <p>&copy; 2024 股票模擬網站</p>
-    </footer>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if stock_data %}
+        <div class="stock-info">
+            <h2>{{ request.form['stock_symbol'].upper() }} 股票資訊</h2>
+            <p>目前價格: {{ stock_data.c }} USD</p>
+            <p>開盤價格: {{ stock_data.o }} USD</p>
+            <p>最高價格: {{ stock_data.h }} USD</p>
+            <p>最低價格: {{ stock_data.l }} USD</p>
+            <p>昨日收盤價: {{ stock_data.pc }} USD</p>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
